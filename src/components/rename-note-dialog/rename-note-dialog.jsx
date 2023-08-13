@@ -2,34 +2,40 @@ import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input } from '@mui/material';
 
 
-export default function CreateNoteDialog({open, setOpen, notes, setNotes, createId}){
+export default function RenameNoteDialog({open, setOpen, notes, setNotes, noteId}){
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [name, setName] = useState("");
+  const note = notes.find(note => note.id === noteId);
+  const initialName = note ? note.name : "";
+
+  const [name, setName] = useState(initialName);
 
   const handleName = (e) =>{
     setName(e.target.value);
   }
 
-  const createNote = () => {
-    const newNote = {
-      name: name,
-      id: createId(),
-    };
-  
-    setNotes([...notes, newNote]);
-    console.log(notes);
-    setName("");    
+  const submitName = () => {
+    const updatedNotes = notes.map(note => {
+      if (note.id === noteId) {
+        return {
+          ...note,
+          name: name
+        };
+      }
+      return note;
+    });
+
+    setNotes(updatedNotes);
     handleClose();
   }
 
   return(
     <>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New Note</DialogTitle>
+        <DialogTitle>Rename Note</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Name: <Input value={name} onChange={handleName} />
@@ -37,7 +43,7 @@ export default function CreateNoteDialog({open, setOpen, notes, setNotes, create
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='error'>Cancel</Button>
-          <Button onClick={createNote} autoFocus>
+          <Button onClick={submitName} autoFocus>
             Submit
           </Button>
         </DialogActions>

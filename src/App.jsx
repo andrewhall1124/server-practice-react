@@ -6,9 +6,15 @@ import Note from './components/note/note';
 import CreateNoteDialog from './components/create-note-dialog/create-note-dialog';
 
 export default function App() {
+  function createId(){
+    return Math.round(Math.random()*10000);
+  }
+
+  const newId = createId();
   const [notes, setNotes ] = useState([
     {
-      name: "Note 1"
+      name: "Note 1",
+      id: newId,
     },
   ]);
 
@@ -26,14 +32,16 @@ export default function App() {
         {notes.map((note, index) => (
           <Note
             title={note.name}
-            key={index}
+            key={note.id}
+            noteId = {note.id}
             notes={notes}
             setNotes={setNotes}
+            createId={createId}
           />
         ))}
 
         <FloatingButton click={handleOpenDialog}/>
-        <CreateNoteDialog open={openDialog} setOpen={setOpenDialog} notes={notes} setNotes={setNotes}/>
+        <CreateNoteDialog open={openDialog} setOpen={setOpenDialog} notes={notes} setNotes={setNotes} createId={createId}/>
       </main>
     </div>
   )

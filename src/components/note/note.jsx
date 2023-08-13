@@ -6,15 +6,12 @@ import CardContent from '@mui/material/CardContent';
 import { Checkbox } from '@mui/material';
 import { TextField, Menu, MenuItem, Button } from '@mui/material';
 import { Add, Delete, Edit, MoreVert } from '@mui/icons-material';
+import RenameNoteDialog from '../rename-note-dialog/rename-note-dialog';
 
-export default function Note({title, key, notes, setNotes}){
-  function createId(){
-    return Math.round(Math.random()*10000);
-  }
-
-  let newId = createId();
+export default function Note({title, noteId, notes, setNotes, createId}){
 
   //Bullet points state
+  let newId = createId();
   const [bullets, setBullets] = useState([{
     id: newId, text: ""
   }])
@@ -42,8 +39,16 @@ export default function Note({title, key, notes, setNotes}){
   };
 
   const deleteNote = (key) => {
-    const updatedNotes = notes.filter(note => note.ley !== key)
+    const updatedNotes = notes.filter(note => note.id !== key)
     setNotes(updatedNotes);
+    handleClose();
+  }
+
+  //Dialog State
+  const [openDialog, setOpenDialog ] = useState(false);
+
+  const handleOpenDialog = () =>{
+    setOpenDialog(true);
   }
 
   // Input box state
@@ -59,6 +64,7 @@ export default function Note({title, key, notes, setNotes}){
   }
 
   return(
+    <>
     <Card>
       <CardContent>
         <Typography variant="h5" color="text.primary">
@@ -72,10 +78,10 @@ export default function Note({title, key, notes, setNotes}){
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleOpenDialog}>
                 Rename
               </MenuItem>
-              <MenuItem onClick={() => {deleteNote(key)}}>
+              <MenuItem onClick={() => {deleteNote(noteId)}}>
                 Delete<Delete/>
               </MenuItem>
             </Menu>
@@ -97,5 +103,7 @@ export default function Note({title, key, notes, setNotes}){
         </IconButton>
       </CardContent>
     </Card>
+    <RenameNoteDialog open={openDialog} setOpen={setOpenDialog} notes={notes} setNotes={setNotes} noteId={noteId} />
+    </>
   )
 }
