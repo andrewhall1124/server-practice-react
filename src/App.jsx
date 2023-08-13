@@ -10,14 +10,7 @@ export default function App() {
     return Math.round(Math.random()*10000);
   }
 
-  const newId = createId();
-  const [notes, setNotes ] = useState([
-    {
-      name: "Note 1",
-      id: newId,
-    },
-  ]);
-
+  const [notes, setNotes ] = useState([]);
 
   const [openDialog, setOpenDialog ] = useState(false);
 
