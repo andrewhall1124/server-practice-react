@@ -22,10 +22,14 @@ jobs:
         run: npm install
 
       - name: Build the website
-        run: npm run build  # Replace with your build command
+        run: npm run build
 
-      - name: Deploy to AWS S3
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws s3 sync build/ s3://server-practice --delete
+      - name: Set AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Copy to S3
+        run: aws s3 sync ./build. s3://server-practice --delete
